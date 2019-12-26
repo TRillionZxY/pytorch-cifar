@@ -21,10 +21,11 @@ parser.add_argument('-r', '--resume', action='store_true',
                     help='resume from checkpoint')
 parser.add_argument('-e', '--epoch', default=150,
                     type=int, help='model train epoch')
-parser.add_argument('-g', '--gpu', default='0', type=str,
+parser.add_argument('-g', '--gpu', default='3', type=str,
                     help='GPU ID Select')
 args = parser.parse_args()
 
+os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
@@ -59,7 +60,7 @@ classes = ('plane', 'car', 'bird', 'cat', 'deer',
 # Model
 print('==> Building model..')
 # net = VGG('VGG19')
-net = ResNet18()
+# net = ResNet18()
 # net = PreActResNet18()
 # net = GoogLeNet()
 # net = DenseNet121()
@@ -68,13 +69,13 @@ net = ResNet18()
 # net = MobileNetV2()
 # net = DPN92()
 # net = ShuffleNetG2()
-# net = SENet18()
+net = SENet18()
 # net = ShuffleNetV2(1)
 # net = EfficientNetB0()
-net = net.to(device)
 if device == 'cuda':
-    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
-    net = torch.nn.DataParallel(net)
+    net = net.to(device)
+    net = net.cuda()
+    # net = torch.nn.DataParallel(net)
     cudnn.benchmark = True
 
 if args.resume:
