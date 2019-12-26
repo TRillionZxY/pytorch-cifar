@@ -4,7 +4,6 @@ import math
 import torch.utils.model_zoo as model_zoo
 
 
-
 model_urls = {
     'resnet18': 'https://download.pytorch.org/models/resnet18-5c106cde.pth',
     'resnet34': 'https://download.pytorch.org/models/resnet34-333f7ec4.pth',
@@ -40,7 +39,7 @@ class ChannelAttention(nn.Module):
 
 
 class SpatialAttention(nn.Module):
-    def __init__(self, kernel_size=7):
+    def __init__(self, kernel_size=3):
         super(SpatialAttention, self).__init__()
 
         assert kernel_size in (3, 7), 'kernel size must be 3 or 7'
@@ -275,3 +274,12 @@ def resnet152_cbam(pretrained=False, **kwargs):
         now_state_dict.update(pretrained_state_dict)
         model.load_state_dict(now_state_dict)
     return model
+
+
+def test():
+    net = resnet18_cbam(pretrained=False)
+    y = net(torch.randn(1, 3, 32, 32))
+    print(y.size())
+
+
+test()
