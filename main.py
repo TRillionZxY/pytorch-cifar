@@ -69,9 +69,11 @@ print('==> Building model..')
 # net = MobileNetV2()
 # net = DPN92()
 # net = ShuffleNetG2()
-net = SENet18()
+# net = SENet18()
 # net = ShuffleNetV2(1)
 # net = EfficientNetB0()
+net = resnet18_cbam(pretrained=False)
+
 if device == 'cuda':
     net = net.to(device)
     net = net.cuda()
