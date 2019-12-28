@@ -146,7 +146,7 @@ class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes=10):
         self.inplanes = 64
         super(ResNet, self).__init__()
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=1, padding=3,
                                bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
@@ -225,6 +225,8 @@ def resnet34_cbam(pretrained=False, **kwargs):
     model = ResNet(BasicBlock, [3, 4, 6, 3], **kwargs)
     if pretrained:
         pretrained_state_dict = model_zoo.load_url(model_urls['resnet34'])
+        pretrained_state_dict = {k: v for k, v in pretrained_state_dict.items() if k not in [
+            'fc.weight', 'fc.bias']}
         now_state_dict = model.state_dict()
         now_state_dict.update(pretrained_state_dict)
         model.load_state_dict(now_state_dict)
@@ -240,6 +242,8 @@ def resnet50_cbam(pretrained=False, **kwargs):
     model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
     if pretrained:
         pretrained_state_dict = model_zoo.load_url(model_urls['resnet50'])
+        pretrained_state_dict = {k: v for k, v in pretrained_state_dict.items() if k not in [
+            'fc.weight', 'fc.bias']}
         now_state_dict = model.state_dict()
         now_state_dict.update(pretrained_state_dict)
         model.load_state_dict(now_state_dict)
@@ -255,6 +259,8 @@ def resnet101_cbam(pretrained=False, **kwargs):
     model = ResNet(Bottleneck, [3, 4, 23, 3], **kwargs)
     if pretrained:
         pretrained_state_dict = model_zoo.load_url(model_urls['resnet101'])
+        pretrained_state_dict = {k: v for k, v in pretrained_state_dict.items() if k not in [
+            'fc.weight', 'fc.bias']}
         now_state_dict = model.state_dict()
         now_state_dict.update(pretrained_state_dict)
         model.load_state_dict(now_state_dict)
@@ -270,6 +276,8 @@ def resnet152_cbam(pretrained=False, **kwargs):
     model = ResNet(Bottleneck, [3, 8, 36, 3], **kwargs)
     if pretrained:
         pretrained_state_dict = model_zoo.load_url(model_urls['resnet152'])
+        pretrained_state_dict = {k: v for k, v in pretrained_state_dict.items() if k not in [
+            'fc.weight', 'fc.bias']}
         now_state_dict = model.state_dict()
         now_state_dict.update(pretrained_state_dict)
         model.load_state_dict(now_state_dict)
@@ -278,8 +286,8 @@ def resnet152_cbam(pretrained=False, **kwargs):
 
 def test():
     net = resnet18_cbam(pretrained=False)
-    y = net(torch.randn(1, 3, 32, 32))
+    y = net(torch.randn(10, 3, 32, 32))
     print(y.size())
 
 
-test()
+# test()
